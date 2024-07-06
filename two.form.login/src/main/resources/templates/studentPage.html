@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student Page</title>
+</head>
+<body>
+<h1>Welcome, Student!</h1>
+<p>This is the student page.</p>
+<div><a th:href="@{/loginAdmin}">Logout</a></div>
+<div><a th:href="@{/studentRestricted}">student allowed</a></div>
+<div><a th:href="@{/adminRestricted}">student restricted</a></div>
+<div><a th:href="@{/student_logout}">Logout</a></div>
+
+</body>
+</html>
