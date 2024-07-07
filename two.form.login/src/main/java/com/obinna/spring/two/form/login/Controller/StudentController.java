@@ -15,7 +15,7 @@ public class StudentController {
     @Autowired
     CustomUserService customUserService;
 
-    @GetMapping("/sForm")
+    @GetMapping("/studentForm")
     public String student(Model model){
         Student student = new Student();
         model.addAttribute("student",student);
@@ -24,8 +24,10 @@ public class StudentController {
 
     @PostMapping("/saveStudent")
     public String saveStudent(@ModelAttribute("student") Student student){
-        Student student1 = new Student();
-        customUserService.saveStudent(student1);
+        Student newStudentLoginDetails = new Student();
+        newStudentLoginDetails.setPassword(student.getPassword());
+        newStudentLoginDetails.setUsername(student.getUsername());
+        customUserService.saveStudent(newStudentLoginDetails);
       return "success";
     }
 
@@ -34,28 +36,23 @@ public class StudentController {
         return "studentLogin";
     }
 
-    @GetMapping("/studentPage")
+    @GetMapping("/api/student/studentPage")
     public String studentPage(Authentication authentication){
         if (authentication != null)
-        System.out.println("Access allowed for authority: "+authentication.getAuthorities());
+         System.out.println("Access allowed for authority: "+authentication.getAuthorities());
         return "studentPage";
     }
 
-      @GetMapping("/studentRestricted")
-    public String restrictStudent(Authentication authentication){
+      @GetMapping("/api/student/studentOnly")
+    public String restrictAdmin(Authentication authentication){
         if(authentication != null)
           System.out.println("Access allowed for authority: "+authentication.getAuthorities());
         return "restrictAdmin";
     }
 
-//    @GetMapping("/403")
-//    public String showAccessDeniedPage(Authentication authentication){
-//        System.out.println("Access Denied for authority: "+authentication.getAuthorities());
-//        return "accessDenied";
-//
-//    }
 
-    @GetMapping("/student_logout")
+
+    @GetMapping("/api/student/student_logout")
     public String logout(){
         return "studentLogin";
     }

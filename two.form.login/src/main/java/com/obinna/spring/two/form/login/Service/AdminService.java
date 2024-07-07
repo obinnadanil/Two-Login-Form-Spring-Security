@@ -14,16 +14,12 @@ import org.springframework.stereotype.Service;
 public class AdminService  {
     @Autowired
     AdminRepo adminRepo;
-//    @Autowired
-//    PasswordEncoder encoder;
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        return new AdminUserDetail(adminRepo.findAdminByUsername(username)
-//                .orElseThrow(() -> new UsernameNotFoundException("user with username:"+username+" not found") ));
-//    }
-//    public void saveAdmin(Admin admin){
-//        admin.setPassword(encoder.encode(admin.getPassword()));
-//        admin.setUsername(admin.getUsername());
-//        adminRepo.save(admin);
-//    }
+    @Autowired
+    PasswordEncoder encoder;
+
+    public void saveAdmin(Admin admin){
+        admin.setPassword(encoder.encode(admin.getPassword()));
+        admin.setUsername(admin.getUsername());
+        adminRepo.save(admin);
+    }
 }

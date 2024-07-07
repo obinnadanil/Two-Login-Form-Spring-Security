@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AdminController {
-
+   @Autowired
+   AdminService adminService;
     @Autowired
     CustomUserService customUserService;
     @GetMapping("/createAdmin")
@@ -30,38 +31,40 @@ public class AdminController {
         return "create-admin";
     }
 
-//    @PostMapping("/saveAdmin")
-//    public String saveAdmin(@ModelAttribute("admin") Admin admin){
-//        Admin adminToSave = new Admin();
-//        adminService.saveAdmin(adminToSave);
-//        return "admin-success";
-//    }
+    @PostMapping("/saveAdmin")
+    public String saveAdmin(@ModelAttribute("admin") Admin admin){
+        Admin newAdminLoginDetails = new Admin();
+        newAdminLoginDetails.setPassword(admin.getPassword());
+        newAdminLoginDetails.setUsername(admin.getUsername());
+        adminService.saveAdmin(newAdminLoginDetails);
+        return "admin-success";
+    }
 
     @GetMapping("/adminLogin")
     public String login(){
         return "adminLogin";
     }
 
-    @GetMapping("/adminPage")
+    @GetMapping("/api/admin/adminPage")
     public String studentPage(){
         return "adminPage";
     }
 
 
-    @GetMapping("/adminRestricted")
+    @GetMapping("/api/admin/adminOnly")
     public String restrictStudent(Authentication authentication){
         if (authentication != null)
-        System.out.println("Access allowed for authority: "+authentication.getAuthorities());
+         System.out.println("Access allowed for authority: "+authentication.getAuthorities());
         return "restrictStudent";
     }
-    @GetMapping("/admin_logout")
+    @GetMapping("/api/admin/admin_logout")
     public String logout(){
         return "adminLogin";
     }
     @GetMapping("/403")
     public String showAccessDeniedPage(Authentication authentication){
         if ((authentication != null))
-        System.out.println("Access Denied for authority: "+authentication.getAuthorities());
+         System.out.println("Access Denied for authority: "+authentication.getAuthorities());
         return "accessDenied";
 
     }

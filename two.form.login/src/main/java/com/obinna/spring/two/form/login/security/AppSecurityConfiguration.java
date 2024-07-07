@@ -29,22 +29,22 @@ public class AppSecurityConfiguration  {
 
             MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
 
-            httpSecurity.securityMatcher("/student*")
+            httpSecurity.securityMatcher("/api/student/**")
                     .authorizeHttpRequests(requestMatcherRegistry ->
-                            requestMatcherRegistry.requestMatchers("/studentLogin").permitAll()
-                                    .requestMatchers(mvcMatcherBuilder.pattern("/student*"))
+                            requestMatcherRegistry.requestMatchers("/studentLogin","/403").permitAll()
+                                    .requestMatchers(mvcMatcherBuilder.pattern("/api/student/**"))
                                     .hasAuthority("ROLE_STUDENT")
 
                                    )
                     .formLogin((httpSecurityFormLoginConfigurer ->
                                     httpSecurityFormLoginConfigurer.loginPage("/studentLogin")
-                                    .loginProcessingUrl("/student_login")
+                                    .loginProcessingUrl("/api/student/student_login")
                                     .failureUrl("/studentLoginPage?error=loginError")
-                                    .defaultSuccessUrl("/studentPage")
+                                    .defaultSuccessUrl("/api/student/studentPage")
                                     )
                             )
                     .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
-                            .logoutUrl("/student_logout")
+                            .logoutUrl("/api/student/student_logout")
                             .deleteCookies("JSESSIONID"))
                     .sessionManagement(httpSecuritySessionManagementConfigurer ->
                             httpSecuritySessionManagementConfigurer.invalidSessionUrl("/studentLogin"))
@@ -68,25 +68,25 @@ public class AppSecurityConfiguration  {
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-            httpSecurity.securityMatcher("/admin*")
+            httpSecurity.securityMatcher("/api/admin/**")
                     .authorizeHttpRequests(requestMatcherRegistry ->
                             requestMatcherRegistry
-                                    .requestMatchers("/adminLogin").permitAll()
-                                    .requestMatchers("/admin*")
+                                    .requestMatchers("/adminLogin", "/403").permitAll()
+                                    .requestMatchers("/api/admin/**")
                                     .hasAuthority("ROLE_ADMIN"))
                     .formLogin(httpSecurityFormLoginConfigurer ->
                             httpSecurityFormLoginConfigurer.loginPage("/adminLogin")
-                                    .loginProcessingUrl("/admin_login")
+                                    .loginProcessingUrl("/api/admin/admin_login")
                                     .failureUrl("/adminLogin?error=loginError")
-                                    .defaultSuccessUrl("/adminPage"))
+                                    .defaultSuccessUrl("/api/admin/adminPage"))
                     .logout(httpSecurityLogoutConfigurer ->
-                            httpSecurityLogoutConfigurer.logoutUrl("/logout_admin")
+                            httpSecurityLogoutConfigurer.logoutUrl("/api/admin/admin_logout")
                                     .deleteCookies("JSESSIONID")
-                                    .logoutSuccessUrl("/logoutAdmin_success"))
-                    .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
-                            httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(accessDeniedHandler()))
+                                    )
                     .sessionManagement(httpSecuritySessionManagementConfigurer ->
                             httpSecuritySessionManagementConfigurer.invalidSessionUrl("/adminLogin"))
+                    .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
+                            httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(accessDeniedHandler()))
                     .csrf(AbstractHttpConfigurer::disable);
 
 
@@ -101,7 +101,7 @@ public class AppSecurityConfiguration  {
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler(){
-        return ((request, response, accessDeniedException) -> response.sendRedirect("403"));
+        return ((request, response, accessDeniedException) -> response.sendRedirect("/403"));
     }
 
 
